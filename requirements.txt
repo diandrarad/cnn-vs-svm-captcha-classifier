@@ -1,0 +1,11 @@
+opencv-python
+numpy
+joblib
+requests
+stringcase
+streamlit
+Claptcha
+Pillow
+scikit-image
+scikit-learn
+tensorflow
