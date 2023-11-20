@@ -12,13 +12,11 @@ from keras.models import load_model, Sequential
 from PIL import Image
 from skimage.feature import hog
 
-mono_path = "FreeMono.ttf"              # Font filename from the URL
 cnn_clf = load_model('cnn_model.hdf5')  # Load the HDF5 model
 svm_clf = joblib.load('svm_model.pkl')  # Load the pkl model
 image_margin = (0, 0)
 char_width = 37.5
 image_size = (int(4 * char_width), 90)
-file_path = 'generated_image.png'
 
 # Define dictionary for character mapping (dict_class)
 dict_class = {0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: 'A', 11: 'B',
@@ -147,7 +145,7 @@ def slice_image(image, captcha_length):
 def generate_captcha(text, image_noise):
     # Create a CAPTCHA image using the Claptcha library
     image_size = (int(char_width * len(text)), 90)
-    c = Claptcha(text.upper(), mono_path, image_size, resample=Image.BICUBIC, noise=image_noise)
+    c = Claptcha(text.upper(), "FreeMono.ttf", image_size, resample=Image.BICUBIC, noise=image_noise)
     c.margin = image_margin
     _, image = c.image
     return image
