@@ -12,8 +12,7 @@ from keras.models import load_model, Sequential
 from PIL import Image
 from skimage.feature import hog
 
-mono_url = "https://github.com/opensourcedesign/fonts/raw/master/gnu-freefont_freemono/FreeMono.ttf"
-mono_path = mono_url.split("/")[-1]     # Font filename from the URL
+mono_path = "FreeMono.ttf"              # Font filename from the URL
 cnn_clf = load_model('cnn_model.hdf5')  # Load the HDF5 model
 svm_clf = joblib.load('svm_model.pkl')  # Load the pkl model
 image_margin = (0, 0)
@@ -150,7 +149,6 @@ def slice_image(image, captcha_length):
 # Function to generate a CAPTCHA
 def generate_captcha(text, image_noise):
     # Create a CAPTCHA image using the Claptcha library
-    download_font(mono_url, mono_path)
     image_size = (int(char_width * len(text)), 90)
     c = Claptcha(text.upper(), mono_path, image_size, resample=Image.BICUBIC, noise=image_noise)
     c.margin = image_margin
@@ -167,16 +165,6 @@ def process_captcha_image(image):
     image = cv2.threshold(gray_scale, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
     return image
-
-def download_font(font_url, font_path):
-    '''Helper function to download the font'''
-    if not os.path.isfile(font_path):
-        response = requests.get(font_url)
-        if response.status_code == 200:
-            with open(font_path, 'wb') as font_file:
-                font_file.write(response.content)
-        else:
-            raise Exception("Failed to download the font file.")
 
 
 if __name__ == "__main__":
