@@ -55,23 +55,20 @@ def main(uploaded_image, captcha_length, custom_text):
     if st.button("Generate CAPTCHA"):
         uploaded_image = None
         if custom_text:
-            generate_captcha(custom_text, image_noise)
+            image = generate_captcha(custom_text, image_noise)
         elif captcha_length:
             random_text = random_string(captcha_length)
-            generate_captcha(random_text, image_noise)
-        image = cv2.imread(file_path)
-        holderplace = placeholder
-        display_image(image, placeholder, captcha_length=captcha_length, uploaded=False)
+            image = generate_captcha(random_text, image_noise)
+        image = np.array(image)
+        display_image(image, captcha_length=captcha_length, uploaded=False)
 
 
     elif uploaded_image is not None:
         image = np.array(Image.open(uploaded_image))
         captcha_length = int(image.shape[1] / char_width)
-        uploaded = True
-        holderplace = placeholder
-        display_image(image, placeholder, captcha_length=captcha_length, uploaded=True)
+        display_image(image, captcha_length=captcha_length, uploaded=True)
 
-def display_image(image, placeholder, captcha_length, uploaded=False):
+def display_image(image, captcha_length, uploaded=False):
 
     # Create two columns to display the images side by side
     with placeholder.container():
@@ -152,7 +149,8 @@ def generate_captcha(text, image_noise):
     image_size = (int(char_width * len(text)), 90)
     c = Claptcha(text.upper(), mono_path, image_size, resample=Image.BICUBIC, noise=image_noise)
     c.margin = image_margin
-    c.write(file_path)
+    _, image = c.image
+    return image
 
 def random_string(length):
     """Helper function to generate random strings"""
@@ -169,6 +167,3 @@ def process_captcha_image(image):
 
 if __name__ == "__main__":
     main(uploaded_image, captcha_length, custom_text)
-
-
-
