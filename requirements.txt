@@ -5,7 +5,7 @@ requests
 stringcase
 streamlit
 Claptcha
-Pillow
+Pillow==9.5.0
 scikit-image
 scikit-learn
 tensorflow
